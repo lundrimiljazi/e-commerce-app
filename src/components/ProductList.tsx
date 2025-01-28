@@ -1,24 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { useProducts } from "../context/ProductContext";
+import { Product, useProducts } from "../context/ProductContext";
 import ProductCard from "./ProductCard";
 
+type SortType = "none" | "price-asc" | "price-desc" | "rating";
 const ProductList = () => {
   const { filteredProducts, products } = useProducts();
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<
-    "none" | "price-asc" | "price-desc" | "rating"
-  >("none");
+  const [sortBy, setSortBy] = useState<SortType>("none");
 
-  let displayedProducts = [...filteredProducts]
-    .filter(
-      (product) =>
-        searchQuery === "" ||
-        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
+  const sortProducts = (products: Product[], sortBy: SortType) => {
+    return [...products].sort((a, b) => {
       switch (sortBy) {
         case "price-asc":
           return a.price - b.price;
@@ -30,9 +23,41 @@ const ProductList = () => {
           return 0;
       }
     });
+  };
+
+  const filterProducts = (products: Product[], searchQuery: string) => {
+    if (searchQuery === "") return products;
+
+    return products.filter(
+      (product) =>
+        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const getDisplayedProducts = (
+    products: Product[],
+    filteredProducts: Product[],
+    searchQuery: string,
+    sortBy: SortType
+  ) => {
+    const productsToDisplay =
+      searchQuery === ""
+        ? filteredProducts
+        : filterProducts(products, searchQuery);
+
+    return sortProducts(productsToDisplay, sortBy);
+  };
+
+  const displayedProducts = getDisplayedProducts(
+    products,
+    filteredProducts,
+    searchQuery,
+    sortBy
+  );
 
   return (
-    <div className="container mx-auto px-4 py-8 ">
+    <div className="container mx-auto px-4 py-8">
       <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between">
         <input
           type="text"
