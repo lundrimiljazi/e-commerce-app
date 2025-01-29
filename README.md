@@ -44,19 +44,7 @@ This project uses App Router for navigation & Tailwind CSS for styling.
 #### Why was it chosen?  
 - Provides a simple and elegant way to show toast notifications.  
 - Highly **customizable** with different styles and positions.  
-
-#### How is it used?  
-- Displaying success, error, or info messages after user interactions.  
-- Used for **cart updates, form submissions, and general app alerts**.  
-- Example:  
-
-```tsx
-import { toast } from "react-hot-toast";
-
-toast.success("Product added to cart!");
-
-
-```
+ 
 
 ## Demo on Vercel
 
