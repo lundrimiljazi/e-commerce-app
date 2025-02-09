@@ -16,13 +16,15 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({
+  params,
   searchParams,
 }: {
-  searchParams: { id: string };
+  params: { slug: string };
+  searchParams: Record<string, string | string[] | undefined>;
 }) {
   if (!searchParams.id) notFound();
 
-  const product = await getProduct(searchParams.id);
+  const product = await getProduct(searchParams.id as string);
 
   if (!product) notFound();
 
