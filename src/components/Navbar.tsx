@@ -1,23 +1,39 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
-import { useCart } from "@/context/CartContext";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useState } from "react";
 import Link from "next/link";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
+import useCartStore from "@/store/useCartStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { Button } from "@/components/ui/button";
+import { ShoppingBag, Menu, X, SearchIcon } from "lucide-react";
+import SearchBar from "./SearchBar";
 
-export default function Navbar() {
-  const { setIsCartOpen, getItemCount } = useCart();
-  const { user, logout } = useAuth();
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+const Navbar = () => {
+  const { getItemCount } = useCartStore();
+  const { user, logout, isAuthenticated } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const itemCount = getItemCount();
 
+  const handleLogout = () => {
+    logout();
+    toast.success("Successfully logged out", { duration: 1500 });
+    setMobileMenuOpen(false);
+  };
+
   return (
-    <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
-      <div className="container mx-auto px-6 py-3">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+    <nav className="bg-white border-b sticky top-0 z-50">
+      <div className=" mx-auto px-4 sm:px-6 lg:px-10">
+        <div className="flex items-center justify-between h-16">
+          <Link href="/" className="flex items-start gap-2">
             <div className="relative w-8 h-8">
               <Image
                 src="/logo.svg"
@@ -29,90 +45,131 @@ export default function Navbar() {
             </div>
             <h1 className="text-2xl font-bold text-gray-900">StyleHub</h1>
           </Link>
-          <div className="flex items-center gap-10">
-            <div className="relative">
-              <button
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
+          <div className="hidden md:flex items-center gap-6">
+            <SearchBar />
+          </div>
+          <div className="hidden md:flex items-center gap-6">
+            {isAuthenticated ? (
+              <div className="flex items-center gap-4">
+                <span className="text-gray-700 flex items-center">
+                  Hi, {user?.username}
+                </span>
+                <Button variant="outline" onClick={handleLogout}>
+                  Log out
+                </Button>
+              </div>
+            ) : (
+              <Link href="/login">
+                <Button
+                  variant="default"
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                  />
-                </svg>
-                <span className="hidden md:block">
-                  {user ? `Hi, ${user.username || user.email}` : "Login"}
-                </span>
-              </button>
+                  Log in
+                </Button>
+              </Link>
+            )}
+            <Link href="/cart" className="relative">
+              <Button variant="outline" className="gap-2">
+                <ShoppingBag className="h-5 w-5" />
+                Cart
+                {mounted && itemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                    {itemCount}
+                  </span>
+                )}
+              </Button>
+            </Link>
+          </div>
 
-              {isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                  {user ? (
-                    <>
-                      <div className="px-4 py-2 text-sm text-gray-700 border-b">
-                        {user.email}
-                      </div>
-                      <button
-                        onClick={() => {
-                          logout();
-                          setIsUserMenuOpen(false);
-                          toast.error("User Logged Out!", { removeDelay: 100 });
-                        }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Sign Out
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <Link
-                        href="/login"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        Login
-                      </Link>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="p-2 hover:bg-gray-100 rounded-full relative group"
+          {/* Mobile menu button */}
+          <div className="md:hidden z-50">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                  {itemCount}
-                </span>
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6 text-black" />
+              ) : (
+                <Menu className="h-6 w-6 text-black" />
               )}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6 text-gray-600 group-hover:text-gray-800"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                />
-              </svg>
-            </button>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSearchModalOpen(true)}
+            >
+              <SearchIcon className="h-6 w-6 text-black" />
+            </Button>
           </div>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            {isAuthenticated ? (
+              <>
+                <div className="px-3 py-2 text-gray-700">
+                  Hi, {user?.username}
+                </div>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={handleLogout}
+                >
+                  Log out
+                </Button>
+              </>
+            ) : (
+              <Link href="/login">
+                <Button
+                  variant="default"
+                  className="w-full justify-start bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Log in
+                </Button>
+              </Link>
+            )}
+            <Link
+              href="/cart"
+              className="block"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Button variant="outline" className="w-full justify-start gap-2">
+                <ShoppingBag className="h-5 w-5" />
+                Cart
+                {mounted && itemCount > 0 && (
+                  <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                    {itemCount}
+                  </span>
+                )}
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile search modal */}
+      {searchModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg ">
+            <SearchBar />
+            <Button
+              className="items-center justify-center text-black"
+              onClick={() => setSearchModalOpen(false)}
+            >
+              Close
+            </Button>
+          </div>
+        </div>
+      )}
     </nav>
   );
-}
+};
+
+export default Navbar;

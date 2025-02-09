@@ -1,106 +1,88 @@
-"use client";
+import React, { useMemo, useCallback } from "react";
+import { useProducts } from "@/store/useProductStore";
+import useProductStore from "@/store/useProductStore";
+import ProductCard from "@/components/ProductCard";
+import { Pagination } from "@/components/Pagination";
+import ProductSkeleton from "./skeleton/ProductSkeleton";
 
-import React, { useState } from "react";
-import { Product, useProducts } from "../context/ProductContext";
-import ProductCard from "./ProductCard";
+export const ProductList = () => {
+  const { selectedCategory, currentPage, itemsPerPage, selectedSort } =
+    useProductStore();
+  const { data: products, error, isLoading } = useProducts(selectedCategory);
 
-type SortType = "none" | "price-asc" | "price-desc" | "rating";
-const ProductList = () => {
-  const { filteredProducts, products } = useProducts();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<SortType>("none");
+  const sortProducts = useCallback(
+    (products: any[]) => {
+      if (!selectedSort || selectedSort === "default") return products;
 
-  const sortProducts = (products: Product[], sortBy: SortType) => {
-    return [...products].sort((a, b) => {
-      switch (sortBy) {
-        case "price-asc":
-          return a.price - b.price;
-        case "price-desc":
-          return b.price - a.price;
-        case "rating":
-          return b.rating.rate - a.rating.rate;
-        default:
-          return 0;
-      }
-    });
-  };
-
-  const filterProducts = (products: Product[], searchQuery: string) => {
-    if (searchQuery === "") return products;
-
-    return products.filter(
-      (product) =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  };
-
-  const getDisplayedProducts = (
-    products: Product[],
-    filteredProducts: Product[],
-    searchQuery: string,
-    sortBy: SortType
-  ) => {
-    const productsToDisplay =
-      searchQuery === ""
-        ? filteredProducts
-        : filterProducts(products, searchQuery);
-
-    return sortProducts(productsToDisplay, sortBy);
-  };
-
-  const displayedProducts = getDisplayedProducts(
-    products,
-    filteredProducts,
-    searchQuery,
-    sortBy
+      return [...products].sort((a, b) => {
+        switch (selectedSort) {
+          case "price_asc":
+            return a.price - b.price;
+          case "price_desc":
+            return b.price - a.price;
+          case "rating_asc":
+            return a.rating.rate - b.rating.rate;
+          case "rating_desc":
+            return b.rating.rate - a.rating.rate;
+          default:
+            return 0;
+        }
+      });
+    },
+    [selectedSort]
   );
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="p-2 border rounded-md w-2/3 text-gray-700"
-        />
+  const filteredProducts = useMemo(() => {
+    if (!products) return [];
+    let filtered = products;
 
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-          className="p-2 border rounded-md text-gray-500"
-        >
-          <option value="none" disabled>
-            Sort by...
-          </option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="rating">Rating</option>
-        </select>
+    if (selectedCategory && selectedCategory !== "All") {
+      filtered = filtered.filter(
+        (product: any) => product.category === selectedCategory
+      );
+    }
+
+    return sortProducts(filtered);
+  }, [products, selectedCategory, sortProducts]);
+
+  if (isLoading)
+    return (
+      <div>
+        <ProductSkeleton />
+      </div>
+    );
+  if (error) {
+    return (
+      <div className="text-center text-red-600">
+        <p>Error loading products. Please try again later.</p>
+        <p>{error.message}</p>
+      </div>
+    );
+  }
+  if (!products) return null;
+
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const paginatedProducts = filteredProducts.slice(start, end);
+
+  return (
+    <div className="container mx-auto p-4 flex flex-col items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-7xl">
+        {paginatedProducts.map((product) => (
+          <ProductCard key={product.id} {...product} />
+        ))}
       </div>
 
-      <p className="mb-4 text-gray-600">
-        Showing {displayedProducts.length} of {filteredProducts.length} products
-      </p>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {displayedProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            title={product.title}
-            price={product.price}
-            image={product.image}
-            rating={product.rating}
-            category={product.category}
-            description={product.description}
-          />
-        ))}
+      <div className="mt-4">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(filteredProducts.length / itemsPerPage)}
+          onPageChange={(page) => {
+            useProductStore.getState().setCurrentPage(page);
+          }}
+          className="pt-4"
+        />
       </div>
     </div>
   );
 };
-
-export default ProductList;

@@ -1,31 +1,124 @@
-interface CategoriesProps {
-  categories: string[];
-  selectedCategory: string;
-  onSelectCategory: (category: string) => void;
-}
+"use client";
 
-export default function Categories({
-  categories,
-  selectedCategory,
-  onSelectCategory,
-}: CategoriesProps) {
+import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import useSWR from "swr";
+import { Button } from "@/components/ui/button";
+import useProductStore from "@/store/useProductStore";
+import { ShoppingBag, Watch, Shirt, Gem, X } from "lucide-react";
+import CategorySkeleton from "./skeleton/CategorySkeleton";
+import { fetcher } from "@/lib/fetcher";
+import SortProducts from "@/components/SortProducts";
+import dynamic from "next/dynamic";
+
+const getCategoryIcon = (category: string) => {
+  switch (category.toLowerCase()) {
+    case "electronics":
+      return <ShoppingBag className="h-4 w-4" />;
+    case "jewelery":
+      return <Gem className="h-4 w-4" />;
+    case "men's clothing":
+      return <Shirt className="h-4 w-4" />;
+    case "women's clothing":
+      return <Shirt className="h-4 w-4" />;
+    default:
+      return <Watch className="h-4 w-4" />;
+  }
+};
+
+const CategoryList: React.FC = () => {
+  const {
+    data: categories,
+    error,
+    isLoading,
+  } = useSWR("https://fakestoreapi.com/products/categories", fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
+  const { setCategory, selectedCategory } = useProductStore();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handleCategorySelect = (category: string | null) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+
+    newSearchParams.delete("page");
+
+    if (
+      category === selectedCategory ||
+      category === "All" ||
+      category === null
+    ) {
+      newSearchParams.delete("category");
+      setCategory("All");
+    } else {
+      newSearchParams.delete("category");
+      newSearchParams.set("category", category);
+      setCategory(category);
+    }
+
+    const query = newSearchParams.toString();
+    router.push(query ? `/?${query}` : "/", { scroll: false });
+  };
+
+  React.useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    setCategory(categoryParam || "All");
+  }, [searchParams, setCategory]);
+
+  if (isLoading) {
+    return <CategorySkeleton />;
+  }
+
+  if (error)
+    return <div className="p-6 text-red-500">Failed to load categories</div>;
+
   return (
-    <div className="mb-8">
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {categories.map((category) => (
-          <button
+    <div className="h-full bg-white">
+      <div className="p-6 border-b">
+        <h2 className="text-lg font-semibold text-gray-900">Categories</h2>
+        <p className="text-sm text-gray-500 mt-1">Browse by category</p>
+      </div>
+      <div className="p-4 space-y-2">
+        {categories.map((category: string) => (
+          <Button
             key={category}
-            onClick={() => onSelectCategory(category)}
-            className={`px-4 py-2 rounded-full whitespace-nowrap transition-all capitalize ${
+            variant={selectedCategory === category ? "secondary" : "ghost"}
+            className={`w-full justify-start text-left font-medium ${
               selectedCategory === category
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800"
+                : "text-gray-600 hover:text-gray-900"
             }`}
+            onClick={() => handleCategorySelect(category)}
           >
-            {category}
-          </button>
+            <span className="flex items-center gap-3 flex-1">
+              {getCategoryIcon(category)}
+              {category}
+            </span>
+            {selectedCategory === category && (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCategorySelect("All");
+                }}
+                className="hover:bg-blue-200 rounded-full p-1"
+              >
+                <X className="h-4 w-4 " />
+              </span>
+            )}
+          </Button>
         ))}
+      </div>
+      <div className="border-t mt-4 pt-4 pl-5">
+        <h2 className="text-lg font-semibold text-gray-900">Sort Options</h2>
+        <SortProducts />
       </div>
     </div>
   );
-}
+};
+
+const Categories = dynamic(() => Promise.resolve(CategoryList), {
+  loading: () => <p>Loading categories...</p>,
+});
+
+export default Categories;

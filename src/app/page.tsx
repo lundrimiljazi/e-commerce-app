@@ -1,39 +1,47 @@
 "use client";
 
-import { useProducts } from "@/context/ProductContext";
-import Pagination from "@/components/Pagination";
+import { ProductList } from "@/components/ProductList";
 import Categories from "@/components/Categories";
-import ProductList from "@/components/ProductList";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import useProductStore from "@/store/useProductStore";
 
 export default function Home() {
-  const {
-    products,
-    categories,
-    selectedCategory,
-    setCategory,
-    isLoading,
-    currentPage,
-    setCurrentPage,
-    totalPages,
-  } = useProducts();
+  const searchParams = useSearchParams();
+  const setCurrentPage = useProductStore((state) => state.setCurrentPage);
+
+  useEffect(() => {
+    const page = searchParams.get("page");
+    if (page) {
+      setCurrentPage(parseInt(page));
+    }
+  }, [searchParams, setCurrentPage]);
 
   return (
-    <>
-      <main className="flex-1 py-8">
-        <div className="container mx-auto px-4">
-          <Categories
-            categories={categories}
-            selectedCategory={selectedCategory}
-            onSelectCategory={setCategory}
-          />
-          <ProductList />
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
-      </main>
-    </>
+    <main className="flex  bg-white">
+      <aside className="w-72 border-r bg-white hidden md:block sticky top-0">
+        <Categories />
+      </aside>
+
+      <div className="md:hidden fixed top-16 left-4 z-10">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="bg-black">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="p-0 w-72">
+            <Categories />
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      <div className="flex-1 px-4 py-6 lg:px-8">
+        <ProductList />
+      </div>
+    </main>
   );
 }

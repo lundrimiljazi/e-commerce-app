@@ -1,11 +1,8 @@
-import type { Metadata } from "next";
+import { Toaster } from "sonner";
 import "./globals.css";
-import { ProductProvider } from "../context/ProductContext";
-import { CartProvider } from "../context/CartContext";
-import { AuthProvider } from "@/context/AuthContext";
-import CartModal from "@/components/CartModal";
-import { Toaster } from "react-hot-toast";
+import { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "StyleHub - Fashion & Lifestyle",
@@ -20,19 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-white">
-        <AuthProvider>
-          <ProductProvider>
-            <CartProvider>
-              <Navbar />
-              <div className="flex min-h-screen flex-col">
-                {children}
-                <CartModal />
-                <Toaster position="top-center" />
-              </div>
-            </CartProvider>
-          </ProductProvider>
-        </AuthProvider>
+      <body className="min-h-screen flex flex-col bg-white">
+        <Navbar />
+        <main className="flex-grow flex flex-col">{children}</main>
+        <Toaster position="top-center" />
+        <Footer />
       </body>
     </html>
   );

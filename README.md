@@ -1,52 +1,72 @@
-# E-Commerce App  
+# E-Commerce App
 
-This is a modern e-commerce application built with **Next.js** and **Tailwind CSS**.  
+This is a modern e-commerce application built with **Next.js** and **Tailwind CSS**.
 
-## 📌 Features  
-- 🛒 Browse and search for products  
-- 📦 Add products to the cart  
-- ⭐ Sort products by price or rating  
-- 🔥 Toast notifications for user interactions  
-- 📱 Fully responsive design  
+## 📌 Features
 
-## 🛠️ Getting Started  
+- 🛒 Browse and search for products
+- 📦 Add products to the cart
+- ⭐ Sort products by price or rating
+- 🔥 Toast notifications for user interactions
+- 📱 Fully responsive design
 
-### 1️⃣ Install Dependencies  
+## 🛠️ Getting Started
 
-Run the following command to install required packages:  
+### 1️⃣ Install Dependencies
+
+Run the following command to install required packages:
 
 ```bash
 npm install
-
 ```
 
-### 2️⃣ Run Development Server  
+### 2️⃣ Run Development Server
 
-Run the following command to start the server:  
+Run the following command to start the server:
 
-```
+```bash
 npm run dev
-#or
+# or
 pnpm run dev
-
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 This project uses App Router for navigation & Tailwind CSS for styling.
 
-## 📦 Third-Party Libraries  
+## 📦 Core Libraries
 
-### 🔥 [react-hot-toast](https://react-hot-toast.com/)  
+### 🎨 UI Components
 
-`react-hot-toast` is a lightweight and customizable toast notification library for React.  
+- **@radix-ui/** - Headless UI components for building accessible interfaces
+- **class-variance-authority** - Create reusable component variants
+- **clsx & tailwind-merge** - Utility for constructing className strings and merging Tailwind classes
+- **lucide-react** - Beautiful and consistent icon set
+- **framer-motion** - Powerful library for animations
 
-#### Why was it chosen?  
-- Provides a simple and elegant way to show toast notifications.  
-- Highly **customizable** with different styles and positions.  
- 
+### 🔄 State Management & Data Fetching
+
+- **zustand** - Lightweight state management with a simple API
+- **swr** - React Hooks for data fetching with caching and revalidation
+- **react-hook-form** - Performant and flexible forms with easy validation
+- **zod** - TypeScript-first schema validation
+
+### 📱 User Experience
+
+- **sonner** - Modern toast notifications with clean design
+- **tailwindcss** - Utility-first CSS framework
+- **tailwindcss-animate** - Animation utilities for Tailwind CSS
+
+### Why These Choices?
+
+- **Radix UI**: Provides unstyled, accessible components that can be customized to match any design
+- **Zustand**: Simpler alternative to Redux with less boilerplate
+- **SWR**: Offers smart caching and revalidation strategies for data fetching
+- **Framer Motion**: Makes complex animations simple and performant
+- **Zod + React Hook Form**: Perfect combination for type-safe form validation
+- **Sonner**: Modern replacement for react-hot-toast with better aesthetics
+- **Tailwind CSS**: Enables rapid UI development with utility classes
 
 ## Demo on Vercel
-
 
 Check out our [Next.js project](https://e-commerce-app-phi-nine.vercel.app) for more details.
