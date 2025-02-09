@@ -2,11 +2,15 @@ import ProductDetails from "@/components/ProductDetails";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProduct } from "@/lib/actions";
+
+type Props = {
+  params: { slug: string };
+  searchParams: { id: string };
+};
+
 export async function generateMetadata({
   searchParams,
-}: {
-  searchParams: { id: string };
-}): Promise<Metadata> {
+}: Props): Promise<Metadata> {
   const product = await getProduct(searchParams.id);
 
   return {
@@ -15,16 +19,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductPage({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: Record<string, string | string[] | undefined>;
-}) {
+export default async function ProductPage({ params, searchParams }: Props) {
   if (!searchParams.id) notFound();
 
-  const product = await getProduct(searchParams.id as string);
+  const product = await getProduct(searchParams.id);
 
   if (!product) notFound();
 
