@@ -4,8 +4,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+} from "@/ui/card";
+import { Separator } from "@/ui/separator";
 
 interface CartSummaryProps {
   cart: any[];

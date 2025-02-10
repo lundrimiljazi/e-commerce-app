@@ -6,7 +6,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import useCartStore from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/button";
 import { ShoppingBag, Menu, X, SearchIcon } from "lucide-react";
 import SearchBar from "./SearchBar";
 import { usePathname } from "next/navigation";
