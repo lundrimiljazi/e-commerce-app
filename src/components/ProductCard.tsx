@@ -2,7 +2,6 @@
 
 import type React from "react";
 import { useState } from "react";
-import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -57,7 +56,6 @@ const ProductCard = ({
       description,
       rating,
     });
-    toast.success("Added to cart");
     setTimeout(() => setIsAdding(false), 500);
   };
 
@@ -74,20 +72,12 @@ const ProductCard = ({
 
         <CardHeader className="p-0">
           <div className="relative aspect-square overflow-hidden bg-white">
-            <div
-              className={cn(
-                "absolute inset-0 bg-gray-100 animate-pulse",
-                imageLoaded ? "hidden" : "block"
-              )}
-            />
             <Image
               src={image || "/placeholder.svg"}
               alt={title}
               className={cn(
-                "w-full h-full object-contain p-6 transition-all duration-500 group-hover:scale-110",
-                !imageLoaded && "opacity-0"
+                "w-full h-full object-contain p-6 transition-all duration-500 group-hover:scale-110"
               )}
-              onLoad={() => setImageLoaded(true)}
               priority
               fill
             />

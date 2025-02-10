@@ -2,7 +2,6 @@ import ProductDetails from "@/components/ProductDetails";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProduct } from "@/lib/actions";
-import { use } from "react";
 
 type Props = {
   params: Promise<{ slug: string }>;
