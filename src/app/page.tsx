@@ -12,13 +12,22 @@ import useProductStore from "@/store/useProductStore";
 export default function Home() {
   const searchParams = useSearchParams();
   const setCurrentPage = useProductStore((state) => state.setCurrentPage);
+  const setCategory = useProductStore((state) => state.setCategory);
 
   useEffect(() => {
     const page = searchParams.get("page");
+    const category = searchParams.get("category");
+
+    if (category) {
+      if (category !== useProductStore.getState().selectedCategory) {
+        setCategory(category);
+      }
+    }
+
     if (page) {
       setCurrentPage(parseInt(page));
     }
-  }, [searchParams, setCurrentPage]);
+  }, [searchParams, setCurrentPage, setCategory]);
 
   return (
     <main className="flex  bg-white">

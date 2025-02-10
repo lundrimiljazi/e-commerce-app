@@ -3,15 +3,27 @@ import useSWR from 'swr'
 import { fetcher } from '@/lib/fetcher';
 import { Product } from '@/types/productType';
 
+const getInitialCategory = () => {
+  if (typeof window === 'undefined') return 'All';
+  const params = new URLSearchParams(window.location.search);
+  return params.get('category') || 'All';
+};
+
 export function useProducts(category?: string) {
-  const url = category && category !== "All"
-    ? `https://fakestoreapi.com/products/category/${category}`
-    : 'https://fakestoreapi.com/products';
+  const url = category !== undefined
+    ? (category !== "All"
+        ? `https://fakestoreapi.com/products/category/${category}`
+        : 'https://fakestoreapi.com/products')
+    : null;
   
-  return useSWR<Product[]>(url, fetcher, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  return useSWR<Product[]>(
+    category ? { url, category } : null,
+    async ({ url }) => fetcher(url),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
 }
 
 interface ProductState {
@@ -38,7 +50,7 @@ interface ProductActions {
 const initialState: ProductState = {
   filteredProducts: [],
   paginatedProducts: [],
-  selectedCategory: "All",
+  selectedCategory: getInitialCategory(),
   currentPage: 1,
   totalPages: 1,
   itemsPerPage: 9,
@@ -51,15 +63,18 @@ const useProductStore = create<ProductState & ProductActions>((set, get) => ({
   ...initialState,
 
   setCategory: (category: string) => {
-    set({ 
-      selectedCategory: category,
-      currentPage: 1,
-    });
-    const currentSort = get().selectedSort;
-    if (currentSort && currentSort !== 'default') {
-      set({ selectedSort: currentSort });
+    // Only update if the category is actually different
+    if (category !== get().selectedCategory) {
+      set({ 
+        selectedCategory: category,
+        currentPage: 1,
+      });
+      const currentSort = get().selectedSort;
+      if (currentSort && currentSort !== 'default') {
+        set({ selectedSort: currentSort });
+      }
+      get().updateUrl();
     }
-    get().updateUrl();
   },
 
   setSelectedProduct: (product) => set({ selectedProduct: product }),
