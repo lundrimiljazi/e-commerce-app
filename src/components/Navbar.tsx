@@ -9,6 +9,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, Menu, X, SearchIcon } from "lucide-react";
 import SearchBar from "./SearchBar";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const { getItemCount } = useCartStore();
@@ -16,10 +17,14 @@ const Navbar = () => {
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    window.scrollTo(0, 0);
+    setMobileMenuOpen(false);
+    setSearchModalOpen(false);
+  }, [pathname]);
 
   const itemCount = getItemCount();
 
@@ -27,6 +32,10 @@ const Navbar = () => {
     logout();
     toast.success("Successfully logged out", { duration: 1500 });
     setMobileMenuOpen(false);
+  };
+
+  const handleSearchComplete = () => {
+    setSearchModalOpen(false);
   };
 
   return (
@@ -97,12 +106,19 @@ const Navbar = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setSearchModalOpen(true)}
+              onClick={() => setSearchModalOpen(!searchModalOpen)}
             >
               <SearchIcon className="h-6 w-6 text-black" />
             </Button>
           </div>
         </div>
+
+        {/* Mobile search bar */}
+        {searchModalOpen && (
+          <div className="md:hidden px-4 py-2 border-t flex items-center justify-center">
+            <SearchBar />
+          </div>
+        )}
       </div>
 
       {/* Mobile menu */}
@@ -150,21 +166,6 @@ const Navbar = () => {
                 )}
               </Button>
             </Link>
-          </div>
-        </div>
-      )}
-
-      {/* Mobile search modal */}
-      {searchModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded-lg ">
-            <SearchBar />
-            <Button
-              className="items-center justify-center text-black"
-              onClick={() => setSearchModalOpen(false)}
-            >
-              Close
-            </Button>
           </div>
         </div>
       )}

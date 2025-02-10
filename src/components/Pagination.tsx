@@ -25,7 +25,7 @@ const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
     const handlePageChange = (page: number) => {
       if (currentPage !== page && page > 0 && page <= totalPages) {
         onPageChange(page);
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({ top: 0, behavior: "auto" });
       }
     };
 

@@ -11,8 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function CartPage() {
-  const { cart, removeFromCart, updateQuantity, getCartTotal, isProcessing } =
-    useCartStore();
+  const { cart, removeFromCart, updateQuantity, getCartTotal } = useCartStore();
 
   if (cart.length === 0) {
     return (
@@ -159,9 +158,8 @@ export default function CartPage() {
                   <Button
                     className="w-full bg-black hover:bg-gray-700 text-white"
                     size="lg"
-                    disabled={isProcessing}
                   >
-                    {isProcessing ? "Processing..." : "Proceed to Checkout"}
+                    Proceed to Checkout
                   </Button>
                 </Link>
               </div>
