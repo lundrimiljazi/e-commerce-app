@@ -63,7 +63,6 @@ const useProductStore = create<ProductState & ProductActions>((set, get) => ({
   ...initialState,
 
   setCategory: (category: string) => {
-    // Only update if the category is actually different
     if (category !== get().selectedCategory) {
       set({ 
         selectedCategory: category,
