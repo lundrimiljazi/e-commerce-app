@@ -15,19 +15,40 @@ interface AuthStore {
   logout: () => void;
 }
 
+const syncToCookie = (state: any) => {
+  if (typeof document !== "undefined") {
+    document.cookie = `auth-storage=${encodeURIComponent(
+      JSON.stringify({
+        state: {
+          token: state.token,
+          user: state.user,
+          isAuthenticated: state.isAuthenticated,
+        },
+      })
+    )}; path=/`;
+  }
+};
+
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set) => ({
       isAuthenticated: false,
       user: null,
       token: null,
-      setAuthState: (state) => set(state),
+      setAuthState: (state) => {
+        set(state);
+        syncToCookie({ ...useAuthStore.getState(), ...state });
+      },
       logout: () => {
         set({
           isAuthenticated: false,
           user: null,
           token: null,
         });
+        if (typeof document !== "undefined") {
+          document.cookie =
+            "auth-storage=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
       },
     }),
     {

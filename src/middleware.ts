@@ -1,0 +1,24 @@
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+export function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname
+
+  const authStorage = request.cookies.get('auth-storage')?.value
+  const token = authStorage ? JSON.parse(decodeURIComponent(authStorage)).state.token : null
+
+  if(path.startsWith('/login') && token) {
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+
+  if (path.startsWith('/cart/checkout') && !token) {
+
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: ['/cart/checkout', '/login'],
+} 
