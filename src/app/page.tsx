@@ -2,8 +2,8 @@
 
 import { ProductList } from "@/components/ProductList";
 import Categories from "@/components/Categories";
-import { Sheet, SheetContent, SheetTrigger } from "@/ui/sheet";
-import { Button } from "@/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";

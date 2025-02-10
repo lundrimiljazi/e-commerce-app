@@ -3,10 +3,10 @@
 import useCartStore from "@/store/useCartStore";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from "lucide-react";
-import { Card, CardContent } from "@/ui/card";
-import { Button } from "@/ui/button";
-import { Separator } from "@/ui/separator";
-import { ScrollArea } from "@/ui/scroll-area";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import Image from "next/image";
 

@@ -6,7 +6,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/ui/select";
+} from "@/components/ui/select";
 import useProductStore from "@/store/useProductStore";
 
 const SortProducts: React.FC = () => {

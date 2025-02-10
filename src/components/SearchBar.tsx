@@ -1,4 +1,4 @@
-import { Input } from "@/ui/input";
+import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

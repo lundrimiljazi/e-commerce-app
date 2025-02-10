@@ -3,7 +3,7 @@
 import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import useSWR from "swr";
-import { Button } from "@/ui/button";
+import { Button } from "@/components/ui/button";
 import useProductStore from "@/store/useProductStore";
 import { X } from "lucide-react";
 import CategorySkeleton from "./skeleton/CategorySkeleton";

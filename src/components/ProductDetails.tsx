@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Button } from "@/ui/button";
-import { Badge } from "@/ui/badge";
-import { Card, CardContent } from "@/ui/card";
-import { Separator } from "@/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import {
   ShoppingCart,
   Truck,
