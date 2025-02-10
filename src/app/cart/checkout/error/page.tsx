@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { Button } from "@/app/ui/button";
+import { Button } from "@/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/app/ui/card";
+} from "@/ui/card";
 import { XCircle } from "lucide-react";
 
 export default function ErrorPage() {
