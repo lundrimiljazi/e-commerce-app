@@ -6,11 +6,13 @@ import { Metadata } from "next";
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: { query: string };
+  searchParams: Promise<{ query: string }>;
 }): Promise<Metadata> {
+  const { query } = await searchParams;
+
   return {
-    title: `Search: ${searchParams.query} | StyleHub`,
-    description: `Search results for "${searchParams.query}" on StyleHub Fashion & Lifestyle`,
+    title: `Search: ${query} | StyleHub`,
+    description: `Search results for "${query}" on StyleHub Fashion & Lifestyle`,
   };
 }
 
@@ -40,12 +42,13 @@ async function SearchResults({ query }: { query: string }) {
   );
 }
 
-export default function SearchPage({
-  searchParams,
-}: {
-  searchParams: { query: string };
-}) {
-  const query = searchParams.query || "";
+type Props = {
+  params: Promise<{}>;
+  searchParams: Promise<{ query?: string }>;
+};
+
+export default async function SearchPage({ searchParams }: Props) {
+  const { query } = await searchParams;
 
   return (
     <div className="container p-4 flex flex-col">
@@ -53,7 +56,7 @@ export default function SearchPage({
         Search Results for "{query}"
       </h1>
       <Suspense fallback={<div>Loading...</div>}>
-        <SearchResults query={query} />
+        <SearchResults query={query ?? ""} />
       </Suspense>
     </div>
   );

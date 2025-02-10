@@ -2,27 +2,25 @@ import ProductDetails from "@/components/ProductDetails";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProduct } from "@/lib/actions";
+import { use } from "react";
 
 type Props = {
-  params: { slug: string };
-  searchParams: { id: string };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ id?: string }>;
 };
 
-export async function generateMetadata({
-  searchParams,
-}: Props): Promise<Metadata> {
-  const product = await getProduct(searchParams.id);
-
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
-    title: `${product.title} | StyleHub`,
-    description: product.description,
+    title: `${(await params).slug} | StyleHub`,
+    description: (await params).slug,
   };
 }
 
-export default async function ProductPage({ params, searchParams }: Props) {
-  if (!searchParams.id) notFound();
+export default async function ProductPage({ searchParams }: Props) {
+  const { id } = await searchParams;
+  if (!id) notFound();
 
-  const product = await getProduct(searchParams.id);
+  const product = await getProduct(id);
 
   if (!product) notFound();
 
