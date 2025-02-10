@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLogin } from "@/store/useAuthStore";
 import { toast } from "sonner";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,7 +18,6 @@ import { Loader2 } from "lucide-react";
 import { loginSchema, FormData } from "@/schema/LoginSchema";
 export default function LoginForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { login, isLoading, error } = useLogin();
 
   const form = useForm<FormData>({
@@ -30,8 +29,9 @@ export default function LoginForm() {
   });
 
   const handleSuccessfulLogin = () => {
-    const redirectTo = searchParams.get("redirect");
-    router.push(redirectTo || "/");
+    const redirectPath = localStorage.getItem("redirectAfterLogin");
+    localStorage.removeItem("redirectAfterLogin");
+    router.push(redirectPath || "/");
   };
 
   const onSubmit = async (data: FormData) => {
@@ -41,6 +41,7 @@ export default function LoginForm() {
       handleSuccessfulLogin();
     } catch (error) {
       toast.error("Invalid credentials", { position: "top-center" });
+    } finally {
     }
   };
 

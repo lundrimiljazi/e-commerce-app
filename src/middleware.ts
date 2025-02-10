@@ -12,17 +12,13 @@ export function middleware(request: NextRequest) {
   if (path.startsWith('/cart/checkout') && !token) {
     // Store the original URL to redirect back after login
     const redirectUrl = new URL('/login', request.url)
-    redirectUrl.searchParams.set('redirect', path)
     return NextResponse.redirect(redirectUrl)
   }
 
   // If accessing login with token, redirect to home
   if (path.startsWith('/login') && token) {
     // Check if there's a redirect parameter
-    const redirectTo = request.nextUrl.searchParams.get('redirect')
-    if (redirectTo) {
-      return NextResponse.redirect(new URL(redirectTo, request.url))
-    }
+   
     return NextResponse.redirect(new URL('/', request.url))
   }
 
