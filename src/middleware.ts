@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
   const authStorage = request.cookies.get('auth-storage')?.value
   const token = authStorage ? JSON.parse(decodeURIComponent(authStorage))?.state?.token : null
   
-  if (path.startsWith('/cart/checkout') && !token) {
+  if (path.includes('/checkout') && !token) {
     const redirectUrl = new URL('/login', request.url)
     return NextResponse.redirect(redirectUrl)
   }
