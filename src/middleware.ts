@@ -4,20 +4,15 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
 
-  // Get all cookies and headers for debugging
   const authStorage = request.cookies.get('auth-storage')?.value
   const token = authStorage ? JSON.parse(decodeURIComponent(authStorage))?.state?.token : null
   
-  // If trying to access checkout without token, redirect to login
   if (path.startsWith('/cart/checkout') && !token) {
-    // Store the original URL to redirect back after login
     const redirectUrl = new URL('/login', request.url)
     return NextResponse.redirect(redirectUrl)
   }
 
-  // If accessing login with token, redirect to home
   if (path.startsWith('/login') && token) {
-    // Check if there's a redirect parameter
    
     return NextResponse.redirect(new URL('/', request.url))
   }

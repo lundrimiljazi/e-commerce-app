@@ -103,8 +103,6 @@ const CategoryList: React.FC = () => {
   );
 };
 
-const Categories = dynamic(() => Promise.resolve(CategoryList), {
-  loading: () => <p>Loading categories...</p>,
-});
+const Categories = dynamic(() => Promise.resolve(CategoryList), {});
 
 export default Categories;
