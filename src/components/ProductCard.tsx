@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { useState } from "react";
 import Link from "next/link";
@@ -37,7 +35,6 @@ const ProductCard = ({
 }: ProductCardProps) => {
   const { addToCart } = useCartStore();
   const [isAdding, setIsAdding] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   const isVisible =
     searchQuery === "" ||
@@ -121,7 +118,7 @@ const ProductCard = ({
             className="w-full bg-white hover:bg-gray-50 border-gray-200 text-gray-900 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
           >
             <ShoppingCart className="mr-2 h-4 w-4" />
-            Add to Cart
+            {isAdding ? "Adding to cart" : "Add to Cart"}
           </Button>
         </CardFooter>
       </Card>
