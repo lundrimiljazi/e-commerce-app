@@ -16,12 +16,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ searchParams }: Props) {
-  const { id } = await searchParams;
-  if (!id) notFound();
+  try {
+    const { id } = await searchParams;
+    if (!id) notFound();
 
-  const product = await getProduct(id);
+    const product = await getProduct(id);
+    if (!product) return notFound();
 
-  if (!product) notFound();
-
-  return <ProductDetails product={product} />;
+    return <ProductDetails product={product} />;
+  } catch (error) {
+    notFound();
+  }
 }

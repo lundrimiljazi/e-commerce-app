@@ -6,7 +6,6 @@ import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -40,7 +39,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className=" max-w-4xl mx-auto px-4 py-8">
       <Link
         href="/"
         className="inline-flex items-center text-sm font-medium text-black hover:text-gray-700 mb-8"
@@ -52,7 +51,7 @@ export default function CartPage() {
 
       <div className="lg:grid lg:grid-cols-3 lg:gap-8">
         <div className="lg:col-span-2">
-          <ScrollArea className="h-[calc(80vh-20rem)] pr-4">
+          <div className="h-[calc(80vh-5rem)] pr-4 overflow-y-scroll scrollbar-thin ">
             <AnimatePresence initial={false}>
               {cart.map((item) => (
                 <motion.div
@@ -125,7 +124,7 @@ export default function CartPage() {
                 </motion.div>
               ))}
             </AnimatePresence>
-          </ScrollArea>
+          </div>
         </div>
 
         <div className="mt-8 lg:mt-0">

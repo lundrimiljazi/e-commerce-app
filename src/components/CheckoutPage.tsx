@@ -17,6 +17,7 @@ export default function CheckoutContent() {
   const total = getCartTotal();
 
   const onSubmit = async (data: CheckoutFormData) => {
+    console.log(data);
     setIsSubmitting(true);
     try {
       await handleCheckout();
