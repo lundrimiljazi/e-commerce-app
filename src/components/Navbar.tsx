@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingBag, Menu, X, SearchIcon } from "lucide-react";
 import SearchBar from "./SearchBar";
 import { usePathname } from "next/navigation";
+import { logoutUser } from "@/lib/authentication";
 
 const Navbar = () => {
   const { getItemCount } = useCartStore();
@@ -28,10 +29,15 @@ const Navbar = () => {
 
   const itemCount = getItemCount();
 
-  const handleLogout = () => {
-    logout();
-    toast.success("Successfully logged out", { duration: 1500 });
-    setMobileMenuOpen(false);
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      logout(); // Clear the auth store state
+      toast.success("Successfully logged out", { duration: 1500 });
+      setMobileMenuOpen(false);
+    } catch (error) {
+      toast.error("Logout failed");
+    }
   };
 
   const handleSearchComplete = () => {

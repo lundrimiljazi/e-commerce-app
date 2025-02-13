@@ -1,7 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLogin } from "@/store/useAuthStore";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -16,9 +15,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import { loginSchema, FormData } from "@/schema/LoginSchema";
+import { useState } from "react";
+import { loginUser } from "@/lib/authentication";
+import { useAuthStore } from "@/store/useAuthStore";
+
 export default function LoginForm() {
   const router = useRouter();
-  const { login, isLoading, error } = useLogin();
+  const [isLoading, setIsLoading] = useState(false);
+  const { setAuthState } = useAuthStore();
 
   const form = useForm<FormData>({
     resolver: zodResolver(loginSchema),
@@ -35,13 +39,29 @@ export default function LoginForm() {
   };
 
   const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
     try {
-      await login(data.username, data.password);
+      const response = await loginUser({
+        username: data.username,
+        password: data.password,
+      });
+
+      // Update auth store state
+      setAuthState({
+        isAuthenticated: true,
+        user: {
+          username: data.username,
+          email: data.username, // or use email from response if available
+        },
+        token: response.token,
+      });
+
       toast.success("Login successful!");
       handleSuccessfulLogin();
     } catch (error) {
       toast.error("Invalid credentials", { position: "top-center" });
     } finally {
+      setIsLoading(false);
     }
   };
 

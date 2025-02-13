@@ -40,7 +40,6 @@ export function CheckoutForm({
   const onFormSubmit = async (data: CheckoutFormData) => {
     try {
       await onSubmit(data);
-      toast.success("Payment successful!");
     } catch (error) {
       toast.error("Payment failed", { position: "top-center" });
     }

@@ -18,15 +18,14 @@ interface AuthStore {
 
 const syncToCookie = (state: any) => {
   if (typeof document !== "undefined") {
-    document.cookie = `auth-storage=${encodeURIComponent(
-      JSON.stringify({
-        state: {
-          token: state.token,
-          user: state.user,
-          isAuthenticated: state.isAuthenticated,
-        },
-      })
-    )}; path=/`;
+    const cookieValue = JSON.stringify({
+      state: {
+        token: state.token,
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }
+    });
+    document.cookie = `auth-storage=${encodeURIComponent(cookieValue)}; path=/`;
   }
 };
 
@@ -54,7 +53,6 @@ export const useAuthStore = create<AuthStore>()(
           document.cookie =
             "auth-storage=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         }
-        // Revalidate cache for protected pages
         await revalidateAuthPaths();
       },
     }),
@@ -65,48 +63,38 @@ export const useAuthStore = create<AuthStore>()(
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state && typeof document !== "undefined") {
+          const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('auth-storage='))
+            ?.split('=')[1];
+          
+          if (cookieValue) {
+            try {
+              // First decode the URI component, then parse JSON
+              const decodedValue = decodeURIComponent(cookieValue);
+              const parsed = JSON.parse(decodedValue);
+              
+              // Ensure the parsed object has the expected structure
+              if (parsed && parsed.state && typeof parsed.state === 'object') {
+                state.setAuthState({
+                  isAuthenticated: parsed.state.isAuthenticated || false,
+                  user: parsed.state.user || null,
+                  token: parsed.state.token || null
+                });
+              }
+            } catch (error) {
+              console.error('Failed to parse auth cookie:', error);
+              // Clear invalid cookie
+              document.cookie =
+                "auth-storage=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
+          }
+        }
+      }
     }
   )
 );
 
-export function useLogin() {
-  const { setAuthState } = useAuthStore();
 
-  const loginFetcher = async (
-    url: string,
-    { arg }: { arg: { username: string; password: string } }
-  ) => {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(arg),
-    });
-
-    if (!response.ok) {
-      throw new Error("Invalid credentials");
-    }
-
-    return response.json();
-  };
-
-  const { trigger, isMutating, error } = useSWRMutation(
-    "https://fakestoreapi.com/auth/login",
-    loginFetcher
-  );
-
-  const login = async (username: string, password: string) => {
-    try {
-      const data = await trigger({ username, password });
-      setAuthState({
-        isAuthenticated: true,
-        user: { username, email: username },
-        token: data.token,
-      });
-    } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
-    }
-  };
-
-  return { login, isLoading: isMutating, error };
-}
