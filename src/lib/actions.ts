@@ -28,7 +28,7 @@ export async function searchProducts(query: string): Promise<{
   } catch (error) {
     return {
       products: [],
-      error: 'Failed to fetch products'
+        error: 'Failed to fetch products'
     };
   }
 
@@ -59,7 +59,7 @@ export async function fetchCategories() {
 
     const categories = await response.json();
     return {
-      categories: ['All', ...categories],
+      categories: [...categories],
       error: null
     };
   } catch (error) {
@@ -67,6 +67,31 @@ export async function fetchCategories() {
     return {
       categories: [],
       error: 'Failed to fetch categories'
+    };
+  }
+}
+export async function fetchAllProducts() {
+  try {
+    const response = await fetch("https://fakestoreapi.com/products", {
+      next: {
+        revalidate: 3600
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch categories');
+    }
+
+    const products = await response.json();
+    return {
+      products: [...products],
+      error: null
+    };
+  } catch (error) {
+    console.error('Fetch categories error:', error);
+    return {
+      products: [],
+      error: 'Failed to fetch products'
     };
   }
 }

@@ -7,7 +7,7 @@ import useCartStore from "@/store/useCartStore";
 import { toast } from "sonner";
 import { CheckoutForm } from "@/components/CheckoutForm";
 import { OrderSummary } from "@/components/OrderSummary";
-import type { CheckoutFormData } from "@/types/checkoutSchema";
+import type { CheckoutFormData } from "@/schema/checkoutSchema";
 
 export default function CheckoutContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);

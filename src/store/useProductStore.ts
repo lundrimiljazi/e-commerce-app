@@ -3,28 +3,7 @@ import useSWR from 'swr'
 import { fetcher } from '@/lib/fetcher';
 import { Product } from '@/types/productType';
 
-const getInitialCategory = () => {
-  if (typeof window === 'undefined') return 'All';
-  const params = new URLSearchParams(window.location.search);
-  return params.get('category') || 'All';
-};
 
-export function useProducts(category?: string) {
-  const url = category !== undefined
-    ? (category !== "All"
-        ? `https://fakestoreapi.com/products/category/${category}`
-        : 'https://fakestoreapi.com/products')
-    : null;
-  
-  return useSWR<Product[]>(
-    category ? { url, category } : null,
-    async ({ url }) => fetcher(url),
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
-}
 
 interface ProductState {
   filteredProducts: Product[];
@@ -50,7 +29,7 @@ interface ProductActions {
 const initialState: ProductState = {
   filteredProducts: [],
   paginatedProducts: [],
-  selectedCategory: getInitialCategory(),
+  selectedCategory: 'All',
   currentPage: 1,
   totalPages: 1,
   itemsPerPage: 9,

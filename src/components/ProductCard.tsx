@@ -11,10 +11,9 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { ShoppingCart, Star } from "lucide-react";
 import useCartStore from "@/store/useCartStore";
-import { Product } from "@/types/productType";
+import type { Product } from "@/types/productType";
 
 type ProductCardProps = Product & {
   searchQuery?: string;
@@ -42,8 +41,9 @@ const ProductCard = ({
     title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     category.toLowerCase().includes(searchQuery.toLowerCase());
 
-  const handleAddToCart = async (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsAdding(true);
     addToCart({
       id,
@@ -65,48 +65,40 @@ const ProductCard = ({
 
   return (
     <Link href={`/products/${slug}?id=${id}`}>
-      <Card className="group h-full overflow-hidden bg-white hover:shadow-2xl transition-all duration-300 relative border-0 rounded-xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
+      <Card className="h-full overflow-hidden bg-white shadow-md transition-shadow duration-300 hover:shadow-lg rounded-lg border border-gray-200 flex flex-col">
         <CardHeader className="p-0">
           <div className="relative aspect-square overflow-hidden bg-white">
             <Image
               src={image || "/placeholder.svg"}
               alt={title}
-              className={cn(
-                "w-full h-full object-contain p-6 transition-all duration-500 group-hover:scale-110"
-              )}
+              className="w-full h-full object-contain p-6"
               priority
               fill
             />
-            <div className="absolute top-4 left-4 flex gap-2">
-              <Badge
-                variant="secondary"
-                className="bg-black/80 text-white hover:bg-black/70"
-              >
-                {category}
-              </Badge>
-            </div>
+            <Badge
+              variant="secondary"
+              className="absolute top-4 left-4 bg-black/80 text-white"
+            >
+              {category}
+            </Badge>
           </div>
         </CardHeader>
 
-        <CardContent className="p-4">
-          <div className="space-y-3">
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="font-medium text-base line-clamp-2 text-gray-800 group-hover:text-gray-900 transition-colors">
-                {title}
-              </h3>
-              <div className="flex flex-col items-end">
-                <span className="text-lg font-bold text-gray-900">
-                  ${price.toFixed(2)}
-                </span>
-                {rating.rate > 0 && (
-                  <div className="flex items-center gap-1 mt-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm text-gray-600">{rating.rate}</span>
-                  </div>
-                )}
-              </div>
+        <CardContent className="p-4 flex-grow">
+          <div className="space-y-2 h-full flex flex-col">
+            <h3 className="font-medium text-base line-clamp-2 text-gray-800 flex-grow">
+              {title}
+            </h3>
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold text-gray-900">
+                ${price.toFixed(2)}
+              </span>
+              {rating.rate > 0 && (
+                <div className="flex items-center gap-1">
+                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  <span className="text-sm text-gray-600">{rating.rate}</span>
+                </div>
+              )}
             </div>
           </div>
         </CardContent>
@@ -116,10 +108,10 @@ const ProductCard = ({
             onClick={handleAddToCart}
             disabled={isAdding}
             variant="outline"
-            className="w-full bg-white hover:bg-gray-50 border-gray-200 text-gray-900 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+            className="w-full bg-white hover:bg-gray-50 border-gray-200 text-gray-900"
           >
             <ShoppingCart className="mr-2 h-4 w-4" />
-            {isAdding ? "Adding to cart" : "Add to Cart"}
+            {isAdding ? "Adding..." : "Add to Cart"}
           </Button>
         </CardFooter>
       </Card>

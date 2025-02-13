@@ -1,40 +1,15 @@
-"use client";
-
-import { ProductList } from "@/components/ProductList";
 import Categories from "@/components/Categories";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import useProductStore from "@/store/useProductStore";
+import ProductList from "@/components/ProductList";
 
 export default function Home() {
-  const searchParams = useSearchParams();
-  const setCurrentPage = useProductStore((state) => state.setCurrentPage);
-  const setCategory = useProductStore((state) => state.setCategory);
-
-  useEffect(() => {
-    const page = searchParams.get("page");
-    const category = searchParams.get("category");
-
-    if (category) {
-      if (category !== useProductStore.getState().selectedCategory) {
-        setCategory(category);
-      }
-    }
-
-    if (page) {
-      setCurrentPage(parseInt(page));
-    }
-  }, [searchParams, setCurrentPage, setCategory]);
-
   return (
     <main className="flex  bg-white">
       <aside className="w-72 border-r bg-white hidden md:block sticky top-0">
         <Categories />
       </aside>
-
       <div className="md:hidden fixed top-16 left-4 z-10">
         <Sheet>
           <SheetTrigger asChild>
