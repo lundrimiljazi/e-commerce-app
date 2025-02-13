@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import useSWRMutation from "swr/mutation";
+import { revalidateAuthPaths } from "@/actions/revalidate";
 
 interface User {
   username: string;
@@ -35,11 +36,15 @@ export const useAuthStore = create<AuthStore>()(
       isAuthenticated: false,
       user: null,
       token: null,
-      setAuthState: (state) => {
+      setAuthState: async (state) => {
         set(state);
         syncToCookie({ ...useAuthStore.getState(), ...state });
+        // Revalidate cache for protected pages
+        if (state.isAuthenticated) {
+          await revalidateAuthPaths();
+        }
       },
-      logout: () => {
+      logout: async () => {
         set({
           isAuthenticated: false,
           user: null,
@@ -49,6 +54,8 @@ export const useAuthStore = create<AuthStore>()(
           document.cookie =
             "auth-storage=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         }
+        // Revalidate cache for protected pages
+        await revalidateAuthPaths();
       },
     }),
     {
