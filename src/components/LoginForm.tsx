@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
-import { loginSchema, FormData } from "@/schema/loginSchema";
+import { loginSchema, FormData } from "@/schema/LoginSchema";
 export default function LoginForm() {
   const router = useRouter();
   const { login, isLoading, error } = useLogin();
