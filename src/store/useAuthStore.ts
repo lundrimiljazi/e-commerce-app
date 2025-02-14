@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import useSWRMutation from "swr/mutation";
 import { revalidateAuthPaths } from "@/actions/revalidate";
 
 interface User {
@@ -31,13 +30,13 @@ const syncToCookie = (state: any) => {
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       isAuthenticated: false,
       user: null,
       token: null,
       setAuthState: async (state) => {
         set(state);
-        syncToCookie({ ...useAuthStore.getState(), ...state });
+        syncToCookie({ ...get(), ...state });
         // Revalidate cache for protected pages
         if (state.isAuthenticated) {
           await revalidateAuthPaths();

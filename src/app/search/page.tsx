@@ -50,7 +50,7 @@ export default async function SearchPage({ searchParams }: Props) {
   const { query } = await searchParams;
 
   return (
-    <div className="container p-4 flex flex-col">
+    <div className="container mx-auto p-4 flex flex-col">
       <h1 className="text-2xl font-bold text-gray-900 mb-4">
         Search Results for "{query}"
       </h1>

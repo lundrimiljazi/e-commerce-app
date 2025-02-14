@@ -32,7 +32,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await logoutUser();
-      logout(); // Clear the auth store state
+      logout();
       toast.success("Successfully logged out", { duration: 1500 });
       setMobileMenuOpen(false);
     } catch (error) {
