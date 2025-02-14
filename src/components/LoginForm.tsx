@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
-import { loginSchema, FormData } from "@/schema/LoginSchema";
+import { loginSchema, type FormData } from "@/schema/LoginSchema";
 import { useState } from "react";
 import { loginUser } from "@/lib/authentication";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -46,12 +46,11 @@ export default function LoginForm() {
         password: data.password,
       });
 
-      // Update auth store state
       setAuthState({
         isAuthenticated: true,
         user: {
           username: data.username,
-          email: data.username, // or use email from response if available
+          email: data.username,
         },
         token: response.token,
       });
@@ -73,12 +72,12 @@ export default function LoginForm() {
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-700 ">Username</FormLabel>
+              <FormLabel className="text-gray-700">Username</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Enter your username"
                   {...field}
-                  className="bg-white text-gray-700"
+                  className="bg-white text-gray-700 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 />
               </FormControl>
               <FormMessage className="text-red-500" />
@@ -90,13 +89,13 @@ export default function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-700 ">Password</FormLabel>
+              <FormLabel className="text-gray-700">Password</FormLabel>
               <FormControl>
                 <Input
                   type="password"
                   placeholder="Enter your password"
                   {...field}
-                  className="bg-white text-gray-700"
+                  className="bg-white text-gray-700 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 />
               </FormControl>
               <FormMessage className="text-red-500" />
@@ -106,7 +105,7 @@ export default function LoginForm() {
         <Button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
         >
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {isLoading ? "Signing in..." : "Sign in"}
