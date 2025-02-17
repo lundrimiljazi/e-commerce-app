@@ -1,5 +1,10 @@
 import Categories from "@/components/Categories";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import ProductList from "@/components/ProductList";
@@ -17,7 +22,11 @@ export default function Home() {
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-72">
+          <SheetContent
+            side="left"
+            className="p-0 w-72 [&>button>svg]:h-4 [&>button>svg]:w-4 [&>button>svg]:text-black "
+          >
+            <SheetTitle className="sr-only">Categories Menu</SheetTitle>
             <Categories />
           </SheetContent>
         </Sheet>

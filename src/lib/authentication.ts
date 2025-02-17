@@ -4,8 +4,6 @@ import { revalidateAuthPaths } from "@/actions/revalidate";
 import { cookies } from "next/headers";
 
 
-
-
 export async function loginUser(credentials: { username: string; password: string }) {
     const cookieStore = await cookies();
 
