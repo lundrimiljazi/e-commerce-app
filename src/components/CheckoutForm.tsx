@@ -29,7 +29,19 @@ export function CheckoutForm({
 }: CheckoutFormProps) {
   const form = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      address: "",
+      city: "",
+      zipCode: "",
+      cardNumber: "",
+      cardExpiry: "",
+      cardCVC: "",
+    },
   });
+
+  const formattedTotal = Number(total).toFixed(2);
 
   const formatExpiryDate = (value: string) => {
     const cleanedValue = value.replace(/[^\d]/g, "");
@@ -96,7 +108,7 @@ export function CheckoutForm({
             )}
           />
 
-          <div className="grid grid-cols-2 gap-4 text-black">
+          <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="city"
@@ -110,6 +122,7 @@ export function CheckoutForm({
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="zipCode"
@@ -134,9 +147,8 @@ export function CheckoutForm({
                 <FormControl>
                   <Input
                     {...field}
+                    maxLength={16}
                     className="bg-white text-gray-700"
-                    placeholder="1234 5678 9012 3456"
-                    maxLength={19}
                   />
                 </FormControl>
                 <FormMessage className="text-red-500" />
@@ -144,53 +156,54 @@ export function CheckoutForm({
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="cardExpiry"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-gray-700">Expiry Date</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(formatExpiryDate(e.target.value))
-                    }
-                    className="bg-white text-gray-700"
-                    placeholder="MM/YY"
-                  />
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="cardExpiry"
+              render={({ field: { onChange, ...field } }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700">Expiry Date</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      onChange={(e) =>
+                        onChange(formatExpiryDate(e.target.value))
+                      }
+                      placeholder="MM/YY"
+                      maxLength={5}
+                      className="bg-white text-gray-700"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="cardCVC"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-gray-700">CVC</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    className="bg-white text-gray-700"
-                    placeholder="123"
-                    maxLength={3}
-                  />
-                </FormControl>
-                <FormMessage className="text-red-500" />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="cardCVC"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700">CVC</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      maxLength={3}
+                      className="bg-white text-gray-700"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <Button
             type="submit"
-            className="w-full bg-black text-white hover:bg-gray-800"
+            className="w-full bg-black hover:bg-gray-800 text-white"
             disabled={isSubmitting}
           >
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isSubmitting ? "Processing..." : `Pay $${total.toFixed(2)}`}
+            {isSubmitting ? "Processing..." : `Pay $${formattedTotal}`}
           </Button>
         </form>
       </Form>

@@ -33,9 +33,9 @@ export default function LoginForm() {
   });
 
   const handleSuccessfulLogin = () => {
-    const redirectPath = localStorage.getItem("redirectAfterLogin");
-    localStorage.removeItem("redirectAfterLogin");
-    router.push(redirectPath || "/");
+    const searchParams = new URLSearchParams(window.location.search);
+    const redirectPath = searchParams.get("from") || "/";
+    router.push(redirectPath);
   };
 
   const onSubmit = async (data: FormData) => {

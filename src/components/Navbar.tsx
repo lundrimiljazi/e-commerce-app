@@ -33,7 +33,7 @@ const Navbar = () => {
     try {
       await logoutUser();
       logout();
-      toast.success("Successfully logged out", { duration: 1500 });
+      toast.success("Successfully logged out");
       setMobileMenuOpen(false);
     } catch (error) {
       toast.error("Logout failed");

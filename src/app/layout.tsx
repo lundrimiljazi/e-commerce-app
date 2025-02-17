@@ -28,7 +28,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-white">
         <Navbar />
         <main className="flex-grow flex flex-col">{children}</main>
-        <Toaster position="top-center" />
+        <Toaster position="top-center" duration={1500} />
         <Footer />
       </body>
     </html>
