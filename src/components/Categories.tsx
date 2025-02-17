@@ -1,4 +1,3 @@
-import { getCategoryIcon } from "@/lib/categoryIcons";
 import ClientCategories from "./ClientCategories";
 import { fetchCategories } from "@/lib/actions";
 

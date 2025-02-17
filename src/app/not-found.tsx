@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { ArrowLeft, Construction } from "lucide-react";
+import { Construction } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Page Not Found",

@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, Package, Search, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { revalidatePath } from "next/cache";
 
 export const metadata: Metadata = {
   title: "Product Not Found",

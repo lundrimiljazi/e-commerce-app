@@ -40,10 +40,7 @@ export default function ProductDetails({ product }: { product: Product }) {
       category: product.category,
       description: product.description,
       image: product.image,
-      rating: {
-        rate: 0,
-        count: 0,
-      },
+      rating: product.rating,
     });
   };
 
