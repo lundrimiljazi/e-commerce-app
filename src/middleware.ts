@@ -38,13 +38,13 @@ export function middleware(request: NextRequest) {
   }
 
   // Handle checkout success/error routes
-  if (path === '/cart/checkout/success' && (!checkoutState?.isCheckoutComplete)) {
-    return NextResponse.redirect(new URL('/cart', request.url))
-  }
+  // if (path === '/cart/checkout/success' && (!checkoutState?.isCheckoutComplete)) {
+  //   return NextResponse.redirect(new URL('/cart', request.url))
+  // }
 
-  if (path === '/cart/checkout/error' && (!checkoutState?.isPaymentFailed)) {
-    return NextResponse.redirect(new URL('/cart', request.url))
-  }
+  // if (path === '/cart/checkout/error' && (!checkoutState?.isPaymentFailed)) {
+  //   return NextResponse.redirect(new URL('/cart', request.url))
+  // }
 
   // Add security headers for protected routes
   if (protectedRoutes.some(route => path.startsWith(route))) {
