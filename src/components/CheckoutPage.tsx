@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import useCartStore from "@/store/useCartStore";
+import useCheckoutStore from "@/store/useCheckoutStore";
 import { toast } from "sonner";
 import { CheckoutForm } from "@/components/CheckoutForm";
 import { OrderSummary } from "@/components/OrderSummary";
@@ -13,17 +14,23 @@ export default function CheckoutContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { cart, handleCheckout, getCartTotal } = useCartStore();
+  const { setCheckoutComplete, setPaymentFailed, resetCheckoutState } =
+    useCheckoutStore();
 
   const total = getCartTotal();
 
   const onSubmit = async (data: CheckoutFormData) => {
     console.log(data);
     setIsSubmitting(true);
+    resetCheckoutState();
+
     try {
       await handleCheckout();
+      setCheckoutComplete(true);
       toast.success("Order placed successfully!");
       router.push("/cart/checkout/success");
     } catch (error) {
+      setPaymentFailed(true);
       toast.error("Payment failed. Please try again.");
       router.push("/cart/checkout/error");
     } finally {

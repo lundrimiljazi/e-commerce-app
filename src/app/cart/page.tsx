@@ -14,7 +14,7 @@ export default function CartPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         <Link
           href="/"
           className="inline-flex items-center text-sm font-medium text-black hover:text-gray-700 mb-8"

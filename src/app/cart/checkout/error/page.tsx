@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,8 +10,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { XCircle } from "lucide-react";
+import useCheckoutStore from "@/store/useCheckoutStore";
+import { useEffect } from "react";
 
 export default function ErrorPage() {
+  const { resetCheckoutState } = useCheckoutStore();
+
+  useEffect(() => {
+    return () => {
+      resetCheckoutState();
+    };
+  }, [resetCheckoutState]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center px-4 py-16">
       <Card className="max-w-md w-full">

@@ -12,10 +12,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CheckCircle } from "lucide-react";
+import useCheckoutStore from "@/store/useCheckoutStore";
 
 export default function SuccessPage() {
   const router = useRouter();
   const [countdown, setCountdown] = useState(3);
+  const { resetCheckoutState } = useCheckoutStore();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -29,8 +31,11 @@ export default function SuccessPage() {
       });
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [router]);
+    return () => {
+      clearInterval(timer);
+      resetCheckoutState();
+    };
+  }, [router, resetCheckoutState]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center px-4 py-16">
