@@ -37,23 +37,5 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
-  // Handle checkout success/error routes
-  // if (path === '/cart/checkout/success' && (!checkoutState?.isCheckoutComplete)) {
-  //   return NextResponse.redirect(new URL('/cart', request.url))
-  // }
-
-  // if (path === '/cart/checkout/error' && (!checkoutState?.isPaymentFailed)) {
-  //   return NextResponse.redirect(new URL('/cart', request.url))
-  // }
-
-  // Add security headers for protected routes
-  if (protectedRoutes.some(route => path.startsWith(route))) {
-    const response = NextResponse.next()
-    response.headers.set('X-Frame-Options', 'DENY')
-    response.headers.set('X-Content-Type-Options', 'nosniff')
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-    return response
-  }
-
   return NextResponse.next()
 } 
