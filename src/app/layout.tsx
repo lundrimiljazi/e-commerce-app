@@ -24,8 +24,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={roboto.className}>
-      <body className="min-h-screen flex flex-col bg-white">
+    <html lang="en">
+      <body
+        className={`${roboto.className} antialiased min-h-screen flex flex-col bg-white`}
+      >
         <Navbar />
         <main className="flex-grow flex flex-col">{children}</main>
         <Toaster position="top-center" duration={1500} />

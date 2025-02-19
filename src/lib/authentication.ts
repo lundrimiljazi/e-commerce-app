@@ -43,7 +43,6 @@ export async function logoutUser() {
     const cookieStore = await cookies();
 
   try {
-    // Clear the auth cookie
     cookieStore.delete("auth-storage");
 
     await revalidateAuthPaths();
