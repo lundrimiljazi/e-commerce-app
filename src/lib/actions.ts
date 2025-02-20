@@ -1,6 +1,5 @@
 'use server';
 
-import { revalidateAuthPaths } from "@/actions/revalidate";
 import { Product } from "@/types/productType";
 
 export async function searchProducts(query: string): Promise<{

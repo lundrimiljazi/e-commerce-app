@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Roboto } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -29,7 +30,10 @@ export default function RootLayout({
         className={`${roboto.className} antialiased min-h-screen flex flex-col bg-white`}
       >
         <Navbar />
-        <main className="flex-grow flex flex-col">{children}</main>
+        <main className="flex-grow flex flex-col">
+          {children}
+          <Analytics />
+        </main>
         <Toaster position="top-center" duration={1500} />
         <Footer />
       </body>

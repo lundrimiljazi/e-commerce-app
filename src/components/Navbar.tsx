@@ -85,10 +85,13 @@ const Navbar = () => {
             )}
             <Link href="/cart" className="relative">
               <Button variant="outline" className="gap-2">
-                <ShoppingBag className="h-5 w-5" />
+                <ShoppingBag data-testid="cart-icon" className="h-5 w-5" />
                 Cart
                 {mounted && itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  <span
+                    data-testid="cart-count"
+                    className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+                  >
                     {itemCount}
                   </span>
                 )}
@@ -163,10 +166,13 @@ const Navbar = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               <Button variant="outline" className="w-full justify-start gap-2">
-                <ShoppingBag className="h-5 w-5" />
+                <ShoppingBag data-testid="cart-icon" className="h-5 w-5" />
                 Cart
                 {mounted && itemCount > 0 && (
-                  <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                  <span
+                    data-testid="cart-count"
+                    className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full"
+                  >
                     {itemCount}
                   </span>
                 )}

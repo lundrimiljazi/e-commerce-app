@@ -65,7 +65,10 @@ const ProductCard = ({
 
   return (
     <Link href={`/products/${slug}?id=${id}`}>
-      <Card className="h-full overflow-hidden bg-white shadow-md transition-shadow duration-300 hover:shadow-lg rounded-lg border border-gray-200 flex flex-col">
+      <div
+        data-testid="product-card"
+        className="h-full overflow-hidden bg-white shadow-md transition-shadow duration-300 hover:shadow-lg rounded-lg border border-gray-200 flex flex-col"
+      >
         <CardHeader className="p-0">
           <div className="relative aspect-square overflow-hidden bg-white">
             <Image
@@ -105,6 +108,7 @@ const ProductCard = ({
 
         <CardFooter className="p-4 pt-0">
           <Button
+            data-testid="add-to-cart"
             onClick={handleAddToCart}
             disabled={isAdding}
             variant="outline"
@@ -114,7 +118,7 @@ const ProductCard = ({
             {isAdding ? "Adding..." : "Add to Cart"}
           </Button>
         </CardFooter>
-      </Card>
+      </div>
     </Link>
   );
 };
