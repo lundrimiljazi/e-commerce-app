@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Roboto } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
-
+import { SpeedInsights } from "@vercel/speed-insights/next";
 const roboto = Roboto({
   weight: ["400", "700"],
   style: ["normal", "italic"],
@@ -33,6 +33,7 @@ export default function RootLayout({
         <main className="flex-grow flex flex-col">
           {children}
           <Analytics />
+          <SpeedInsights />
         </main>
         <Toaster position="top-center" duration={1500} />
         <Footer />
